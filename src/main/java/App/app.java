@@ -10,32 +10,78 @@ public static double generarNumero(int max, int min) {
 }
 
 public class app {
-    static void main(String[] args) {
-        //Debes crear una colección de 100 registros (genérala con un for o con
-        //Stream.generate que cree objetos Registro poniendo valores aleatorios de temperatura y humedad, y
-        //la fecha le añada un minuto a cada registro), y deberás resolver lo siguiente utilizando Streams
+    private static int contadorMinutos = 0;
 
-        List<Registro> EjemploRegistro = new ArrayList<>();
-        LocalDateTime ejemploTiempo= LocalDateTime.now();
+    static void main() {
 
-        for (int i = 0; i < 100; i++) {
-            double tempoGenerar = generarNumero(30, 10);
-            double humedadGenerar = generarNumero(60, 40);
-            LocalDateTime tiempoRegistro = ejemploTiempo.plusMinutes(i);
-            EjemploRegistro.add(new Registro(tiempoRegistro, tempoGenerar, humedadGenerar));
-        }
+        Supplier<Registro> generadorRegistros = () -> {
+            LocalDateTime fecha = LocalDateTime.now().minusHours(2).plusMinutes(contadorMinutos++);
+            double temp = generarNumero(30, 10);
+            double hum = generarNumero(60, 40);
+            return new Registro(fecha, temp, hum);
+        };
 
-        //1. Filtrar los registros de temperatura que sean mayores a 25 grados, la humedad sea menor a 70 y la
-        //fecha sea anterior a la fecha actual, y mostrarlos.
-        System.out.println("--- 1 ---");
-        EjemploRegistro.stream()
-                .filter(p -> p.getTemperatura() > 25 && p.getHumedad() < 70 && p.getFechaHora().isBefore(LocalDateTime.now()))
-                .forEach(System.out::println);
+        List<Registro> registros = Stream.generate(generadorRegistros)
+                .limit(100)
+                .toList();
 
-        //2. Encontrar el registro con la temperatura más alta y mostrar el registro completo
-        System.out.println("--- 2 ---");
-        Optional<Registro> maxTemp = EjemploRegistro.stream()
-                .max(Comparator.comparing(Registro::getTemperatura));
+        IO.println("--- 1 ---");
+        registros.stream()
+                .filter(r -> r.getTemperatura() > 25.0)
+                .filter(r -> r.getHumedad() < 70.0)
+                .filter(r -> r.getFechaHora().isBefore(LocalDateTime.now()))
+                .forEach(IO::println);
 
+        IO.println("--- 2 ---");
+        registros.stream()
+                .max(Comparator.comparing(Registro::getTemperatura))
+                .ifPresent(IO::println);
+
+        IO.println("--- 3 ---");
+        List<LocalDateTime> fechas = registros.stream()
+                .map(Registro::getFechaHora)
+                .toList();
+        fechas.forEach(IO::println);
+
+        IO.println("--- 4 ---");
+        registros.stream()
+                .map(r -> new Registro(r.getFechaHora(), r.getTemperatura(), r.getHumedad() + 5.0))
+                .forEach(IO::println);
+
+        IO.println("--- 5 ---");
+        registros.stream()
+                .filter(r -> r.getHumedad() > 80.0)
+                .min(Comparator.comparing(Registro::getTemperatura))
+                .ifPresent(IO::println);
+
+        IO.println("--- 6 ---");
+        boolean condicionCumplida = registros.stream()
+                .anyMatch(r -> r.getTemperatura() > 30.0 &&
+                        r.getHumedad() > 90.0 &&
+                        r.getFechaHora().toLocalDate().isEqual(LocalDate.now()));
+        IO.println(condicionCumplida ? "SI hay un registro " : "NO hay registros ");
+
+        IO.println("--- 7 ---");
+        registros.stream()
+                .skip(5)
+                .limit(10)
+                .forEach(IO::println);
+
+        IO.println("--- 8 ---");
+        registros.stream()
+                .sorted(Comparator.comparing(Registro::getFechaHora))
+                .forEach(IO::println);
+
+        IO.println("--- 9 ---");
+        long totalCalor = registros.stream()
+                .filter(r -> r.getTemperatura() > 35.0)
+                .count();
+        IO.println(totalCalor);
+
+        IO.println("--- 10 ---");
+        registros.stream()
+                .mapToDouble(Registro::getTemperatura)
+                .average()
+                .ifPresent(IO::println);
     }
 }
