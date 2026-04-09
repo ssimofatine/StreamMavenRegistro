@@ -33,9 +33,9 @@ public class app {
 
         IO.println("--- 1 ---");
         registros.stream()
-                .filter(r -> r.getTemperatura() > 25.0)
-                .filter(r -> r.getHumedad() < 70.0)
-                .filter(r -> r.getFechaHora().isBefore(LocalDateTime.now()))
+                .filter(p -> p.getTemperatura() > 25.0)
+                .filter(p -> p.getHumedad() < 70.0)
+                .filter(p -> p.getFechaHora().isBefore(LocalDateTime.now()))
                 .forEach(IO::println);
 
         IO.println("--- 2 ---");
@@ -51,21 +51,21 @@ public class app {
 
         IO.println("--- 4 ---");
         registros.stream()
-                .map(r -> new Registro(r.getFechaHora(), r.getTemperatura(), r.getHumedad() + 5.0))
+                .map(p -> new Registro(p.getFechaHora(), p.getTemperatura(), p.getHumedad() + 5.0))
                 .forEach(IO::println);
 
         IO.println("--- 5 ---");
         registros.stream()
-                .filter(r -> r.getHumedad() > 80.0)
+                .filter(p -> p.getHumedad() > 80.0)
                 .min(Comparator.comparing(Registro::getTemperatura))
                 .ifPresent(IO::println);
 
         IO.println("--- 6 ---");
         boolean condicionCumplida;
         condicionCumplida = registros.stream()
-                .anyMatch(r -> r.getTemperatura() > 30.0 &&
-                        r.getHumedad() > 90.0 &&
-                        r.getFechaHora().toLocalDate().isEqual(LocalDate.now()));
+                .anyMatch(p -> p.getTemperatura() > 30.0 &&
+                        p.getHumedad() > 90.0 &&
+                        p.getFechaHora().toLocalDate().isEqual(LocalDate.now()));
         String mensage1 , mensage2;
         mensage1 = "si hay algún registro que cumple esta condición ";
         mensage2 = "NO hay registros ";
@@ -79,20 +79,6 @@ public class app {
                 .forEach(IO::println);
 
         IO.println("--- 8 ---");
-        registros.stream()
-                .sorted(Comparator.comparing(Registro::getFechaHora))
-                .forEach(IO::println);
 
-        IO.println("--- 9 ---");
-        long totalCalor = registros.stream()
-                .filter(r -> r.getTemperatura() > 35.0)
-                .count();
-        IO.println(totalCalor);
-
-        IO.println("--- 10 ---");
-        registros.stream()
-                .mapToDouble(Registro::getTemperatura)
-                .average()
-                .ifPresent(IO::println);
     }
 }
