@@ -19,7 +19,9 @@ public class app {
     static void main() {
 
         Supplier<Registro> generadorRegistros = () -> {
-            LocalDateTime fecha = LocalDateTime.now().minusHours(2).plusMinutes(contadorMinutos++);
+            int contadorMinutos1;
+            contadorMinutos1 = contadorMinutos++;
+            LocalDateTime fecha = LocalDateTime.now().minusHours(2).plusMinutes(contadorMinutos1);
             double temp = generarNumero(30, 10);
             double hum = generarNumero(60, 40);
             return new Registro(fecha, temp, hum);
@@ -59,11 +61,16 @@ public class app {
                 .ifPresent(IO::println);
 
         IO.println("--- 6 ---");
-        boolean condicionCumplida = registros.stream()
+        boolean condicionCumplida;
+        condicionCumplida = registros.stream()
                 .anyMatch(r -> r.getTemperatura() > 30.0 &&
                         r.getHumedad() > 90.0 &&
                         r.getFechaHora().toLocalDate().isEqual(LocalDate.now()));
-        IO.println(condicionCumplida ? "SI hay un registro " : "NO hay registros ");
+        String mensage1 , mensage2;
+        mensage1 = "si hay algún registro que cumple esta condición ";
+        mensage2 = "NO hay registros ";
+        IO.println(condicionCumplida ? mensage1 : mensage2);
+
 
         IO.println("--- 7 ---");
         registros.stream()
