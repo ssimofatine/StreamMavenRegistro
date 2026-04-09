@@ -16,8 +16,8 @@ public class Test {
         for (int i = 0; i < 100; i++) {
             double tempRandom = (Math.random() * 30) + 10;
             double humRandom = (Math.random() * 60) + 40;
-            LocalDateTime tiempoRegistro = tiempoBase.plusMinutes(i);
-            registros.add(new Registro(tiempoRegistro, tempRandom, humRandom));
+//            LocalDateTime tiempoRegistro = tiempoBase.plusMinutes(i);
+//            registros.add(new Registro(tiempoRegistro, tempRandom, humRandom));
         }
 
         System.out.println("--- 1 ---");
