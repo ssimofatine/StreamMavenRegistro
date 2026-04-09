@@ -1,15 +1,19 @@
 package App;
 
+
 import Modeles.Registro;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-public static double generarNumero(int max, int min) {
-    return (Math.random() * (max - min + 1)) + min;
-}
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class app {
+    public static double generarNumero(int max, int min) {
+        return (Math.random() * (max - min + 1)) + min;
+    }
+
     private static int contadorMinutos = 0;
 
     static void main() {
